@@ -2,18 +2,9 @@ import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-interface VillageData {
-  coordinates: [number, number][][];
-  plotNumbers: string[];
-}
-
-interface VillageMapProps {
-  villageData: VillageData | null;
-}
-
-const VillageMap = ({ villageData }: VillageMapProps) => {
-  const mapRef = useRef<L.Map | null>(null);
-  const mapContainerRef = useRef<HTMLDivElement>(null);
+const VillageMap = ({ villageData }) => {
+  const mapRef = useRef(null);
+  const mapContainerRef = useRef(null);
 
   useEffect(() => {
     if (!mapContainerRef.current) return;
@@ -42,16 +33,14 @@ const VillageMap = ({ villageData }: VillageMapProps) => {
     // Add village polygons if data exists
     if (villageData && villageData.coordinates.length > 0 && mapRef.current) {
       villageData.coordinates.forEach((polygon, index) => {
-        const latLngs: L.LatLngExpression[] = polygon.map(
-          ([lng, lat]) => [lat, lng] as L.LatLngExpression
-        );
+        const latLngs = polygon.map(([lng, lat]) => [lat, lng]);
 
         const polygonLayer = L.polygon(latLngs, {
           color: '#22c55e',
           fillColor: '#22c55e',
           fillOpacity: 0.3,
           weight: 2,
-        }).addTo(mapRef.current!);
+        }).addTo(mapRef.current);
 
         // Add plot number markers
         if (villageData.plotNumbers[index]) {
@@ -62,13 +51,13 @@ const VillageMap = ({ villageData }: VillageMapProps) => {
               html: `<div style="background: white; padding: 4px 8px; border-radius: 4px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">${villageData.plotNumbers[index]}</div>`,
               iconSize: [40, 30],
             }),
-          }).addTo(mapRef.current!);
+          }).addTo(mapRef.current);
         }
       });
 
       // Fit map to show all polygons
       const allLatLngs = villageData.coordinates.flatMap((polygon) =>
-        polygon.map(([lng, lat]) => [lat, lng] as L.LatLngExpression)
+        polygon.map(([lng, lat]) => [lat, lng])
       );
       const bounds = L.latLngBounds(allLatLngs);
       mapRef.current.fitBounds(bounds, { padding: [50, 50] });

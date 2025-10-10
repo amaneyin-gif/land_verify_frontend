@@ -14,26 +14,6 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { CheckCircle, XCircle } from 'lucide-react';
 
-interface District {
-  id: string;
-  name: string;
-  lgdCode: string;
-}
-
-interface SubDistrict {
-  id: string;
-  name: string;
-  lgdCode: string;
-}
-
-interface Village {
-  id: string;
-  name: string;
-  lgdCode: string;
-  coordinates: [number, number][][];
-  plotNumbers: string[];
-}
-
 const incorrectReasons = [
   'Boundary mismatch',
   'Incorrect coordinates',
@@ -46,10 +26,10 @@ const VerifyVillage = () => {
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [selectedSubDistrict, setSelectedSubDistrict] = useState('');
   const [selectedVillage, setSelectedVillage] = useState('');
-  const [districts, setDistricts] = useState<District[]>([]);
-  const [subDistricts, setSubDistricts] = useState<SubDistrict[]>([]);
-  const [villages, setVillages] = useState<Village[]>([]);
-  const [villageData, setVillageData] = useState<Village | null>(null);
+  const [districts, setDistricts] = useState([]);
+  const [subDistricts, setSubDistricts] = useState([]);
+  const [villages, setVillages] = useState([]);
+  const [villageData, setVillageData] = useState(null);
   const [isVerified, setIsVerified] = useState(false);
   const [showReasonSelect, setShowReasonSelect] = useState(false);
   const [selectedReason, setSelectedReason] = useState('');
@@ -122,7 +102,7 @@ const VerifyVillage = () => {
   const fetchVillageData = async () => {
     // TODO: Replace with actual API call
     // Mock data for demonstration
-    const mockData: Village = {
+    const mockData = {
       id: selectedVillage,
       name: villages.find((v) => v.id === selectedVillage)?.name || '',
       lgdCode: villages.find((v) => v.id === selectedVillage)?.lgdCode || '',

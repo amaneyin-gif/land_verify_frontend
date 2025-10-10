@@ -1,14 +1,6 @@
-import { LucideIcon } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 
-interface StatCardProps {
-  title: string;
-  value: number | string;
-  icon: LucideIcon;
-  variant?: 'success' | 'warning' | 'default';
-}
-
-const StatCard = ({ title, value, icon: Icon, variant = 'default' }: StatCardProps) => {
+const StatCard = ({ title, value, icon: Icon, variant = 'default' }) => {
   const variantStyles = {
     success: 'bg-success/10 text-success',
     warning: 'bg-warning/10 text-warning',

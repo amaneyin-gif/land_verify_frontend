@@ -1,21 +1,9 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 
-interface User {
-  userId: string;
-  name: string;
-}
+const AuthContext = createContext(undefined);
 
-interface AuthContextType {
-  user: User | null;
-  login: (userId: string, password: string) => Promise<boolean>;
-  logout: () => void;
-  isAuthenticated: boolean;
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     // Check if user is already logged in
@@ -25,7 +13,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const login = async (userId: string, password: string): Promise<boolean> => {
+  const login = async (userId, password) => {
     // TODO: Replace with actual API call
     // This is a mock implementation
     try {

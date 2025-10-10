@@ -13,21 +13,13 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 
-interface RecentVillage {
-  id: string;
-  villageName: string;
-  district: string;
-  status: 'correct' | 'incorrect';
-  verifiedAt: string;
-}
-
 const Dashboard = () => {
   const [stats, setStats] = useState({
     totalVerified: 0,
     correctMaps: 0,
     pending: 0,
   });
-  const [recentVillages, setRecentVillages] = useState<RecentVillage[]>([]);
+  const [recentVillages, setRecentVillages] = useState([]);
 
   useEffect(() => {
     // TODO: Fetch actual data from API
