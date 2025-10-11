@@ -1,0 +1,21 @@
+accordion - Collapsible content sections
+alert/alert-dialog - Show important messages/confirmations
+avatar - Display user profile pictures
+badge - Small status/label indicators
+button - Interactive buttons with variants
+calendar - Date picker calendar
+card - Container for grouped content
+checkbox/radio-group/switch - Form input controls
+dialog/sheet/drawer - Modal overlays
+dropdown-menu/context-menu - Action menus
+form - Form components with validation
+input/textarea - Text input fields
+label - Form field labels
+popover/tooltip/hover-card - Floating information
+select - Dropdown selection
+table - Data tables
+tabs - Tabbed navigation
+toast/toaster - Notification messages
+progress/slider - Progress indicators
+separator - Visual dividers
+skeleton - Loading placeholders

@@ -13,6 +13,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { login, isAuthenticated } = useAuth();
+  
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -25,22 +26,37 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-
+// console.log(login,"_-login")
     try {
-      const success = await login(userId, password);
-      if (success) {
-        toast({
-          title: 'Login Successful',
-          description: 'Welcome to AgriStack Village Land Verifier',
-        });
-        navigate('/dashboard');
-      } else {
-        toast({
-          title: 'Login Failed',
-          description: 'Invalid user ID or password',
-          variant: 'destructive',
-        });
-      }
+      // Temporary admin login check
+    if (userId === 'admin' && password === 'admin123') {
+      console.log({userId, password })
+      // login(true);
+      // login(userId,password)
+      console.log(login,"__login")
+      toast({
+        title: 'Admin Login Successful',
+        description: 'Welcome Admin!',
+      });
+      navigate('/dashboard');
+      return; // Stop further login attempts
+    }
+
+    // Normal login flow for other users
+      // const success = await login(userId, password);
+      // if (success) {
+      //   toast({
+      //     title: 'Login Successful',
+      //     description: 'Welcome to AgriStack Village Land Verifier',
+      //   });
+      //   navigate('/dashboard');
+      // } else {
+      //   toast({
+      //     title: 'Login Failed',
+      //     description: 'Invalid user ID or password',
+      //     variant: 'destructive',
+      //   });
+      // }
     } catch (error) {
       toast({
         title: 'Error',

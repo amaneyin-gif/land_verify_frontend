@@ -14,14 +14,16 @@ const Navbar = () => {
 
   return (
     <nav className="bg-card border-b border-border shadow-soft sticky top-0 z-50">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-8">
             <Link to="/dashboard" className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center" >
                 <MapPin className="h-5 w-5 text-primary-foreground" />
               </div>
-              <span className="font-semibold text-lg text-foreground">AgriStack</span>
+              <div style={{ marginRight:"5px"}}>
+              <span className="font-semibold text-lg text-foreground" >AgriStack</span>
+              </div>
             </Link>
             
             <div className="hidden md:flex items-center gap-2">
