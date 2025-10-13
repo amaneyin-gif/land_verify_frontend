@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
+import React from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-
+console.log(React.version,"__version")
 const VillageMap = ({ villageData }) => {
   const mapRef = useRef(null);
   const mapContainerRef = useRef(null);
