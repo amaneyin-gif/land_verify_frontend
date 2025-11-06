@@ -8,7 +8,7 @@ const Navbar = () => {
   const location = useLocation();
 
   const navItems = [
-    { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { path: '/dashboard', label: 'Home', icon: LayoutDashboard },
     { path: '/verify', label: 'Verify Village', icon: MapPin },
   ];
 

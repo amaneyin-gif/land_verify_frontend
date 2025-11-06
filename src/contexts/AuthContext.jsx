@@ -13,26 +13,26 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const login = async (userId, password) => {
+  const login = async (userid, password) => {
     // TODO: Replace with actual API call
     // This is a mock implementation
     try {
       // Simulate API call
-      const response = await fetch('/api/login', {
+      const response = await fetch(`${process.env.REACT_BACKEND}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, password }),
+        body: JSON.stringify({ userid, password }),
       }).catch(() => {
         // Mock response for development
         return {
           ok: true,
-          json: async () => ({ userId, name: 'Admin User' }),
+          json: async () => ({ userid, name: 'Admin User' }),
         };
       });
 
       if (response.ok) {
         const userData = await response.json();
-        const user = { userId: userData.userId, name: userData.name };
+        const user = { userid: userData.userid, name: userData.name };
         setUser(user);
         localStorage.setItem('user', JSON.stringify(user));
         return true;

@@ -4,6 +4,7 @@ const StatCard = ({ title, value, icon: Icon, variant = 'default' }) => {
   const variantStyles = {
     success: 'bg-success/10 text-success',
     warning: 'bg-warning/10 text-warning',
+    info: 'bg-blue-100/10 text-blue-600',
     default: 'bg-primary/10 text-primary',
   };
 
