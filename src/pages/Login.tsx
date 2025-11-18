@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import { showToast } from '@/components/ui/show-toast';
 
 const Login = () => {
   const [userId, setUserId] = useState('');
@@ -19,7 +20,7 @@ const Login = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/dashboard', { replace: true });
+      navigate('/home', { replace: true });
     }
   }, [isAuthenticated, navigate]);
 
@@ -34,11 +35,12 @@ const Login = () => {
       // login(true);
       // login(userId,password)
       console.log(login,"__login")
-      toast({
-        title: 'Admin Login Successful',
-        description: 'Welcome Admin!',
-      });
-      navigate('/dashboard');
+      // toast({
+      //   title: 'Admin Login Successful',
+      //   description: 'Welcome Admin!',
+      // });
+      showToast(200, 'Admin Login Successful');
+      navigate('/home');
       return; // Stop further login attempts
     }
 

@@ -18,6 +18,7 @@ export const AuthProvider = ({ children }) => {
     // This is a mock implementation
     try {
       // Simulate API call
+      console.log(process.env.REACT_BACKEND,"__react backend")
       const response = await fetch(`${process.env.REACT_BACKEND}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
