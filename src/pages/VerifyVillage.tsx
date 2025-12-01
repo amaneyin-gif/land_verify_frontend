@@ -525,7 +525,7 @@ const VerifyVillage = () => {
   const initialVillageCode = location.state?.villageLgdCode;
   const village_name = location.state?.village_name;
   const { toast } = useToast();
-
+  const token = JSON.parse(localStorage.getItem('user'))?.token || '';
 
   // only if redirected from dashboard
   useEffect(() => {
@@ -534,7 +534,12 @@ const VerifyVillage = () => {
     const fetchVillageFromDashboard = async () => {
       setLoading(true);
       try {
-        const checkRes = await fetch(`${REACT_APP_BACKEND1}/check-verification/${initialVillageCode}`);
+        const checkRes = await fetch(`${REACT_APP_BACKEND1}/check-verification/${initialVillageCode}`, {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,   // <-- Send token
+          }
+        });
         const checkData = await checkRes.json();
         if (checkData?.data?.verified) setIsVerified(true);
 
@@ -695,22 +700,24 @@ const VerifyVillage = () => {
     setLoading(true);
     let data;
     try {
-      const response = await fetch(`${REACT_APP_BACKEND1}/check-verification/${selectedVillage}`).catch(
+      const response = await fetch(`${REACT_APP_BACKEND1}/check-verification/${selectedVillage}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,   // <-- Send token
+        }
+      }).catch(
         () => ({ ok: true, json: async () => ({ verified: false }) })
       );
       data = await response.json();
-      console.log(data.data, "__data from verified check-verification")
       if (!data.data) {
         setVerificationStatus({
           // name: "Unknown Village",
           status: "Not Verified",
         });
         setIsVerified(false);
-        console.log(verificationStatus, "set from here0")
 
         return;
       };
-      console.log(data.data.verified, "__data.data.verified")
       if (data?.data?.verified) setIsVerified(true);
 
       setVerificationStatus(
@@ -772,7 +779,12 @@ const VerifyVillage = () => {
     if (!selectedVillage) return;
     setLoading(true);
     try {
-      const res2 = await fetch(`${REACT_APP_BACKEND1}/check-plot-count/${selectedVillage}`);
+      const res2 = await fetch(`${REACT_APP_BACKEND1}/check-plot-count/${selectedVillage}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,   // <-- Send token
+        }
+      });
       if (!res2.ok) throw new Error("Failed to fetch plot count");
       const data2 = await res2.json();
       const plotCount = {
@@ -810,7 +822,11 @@ const VerifyVillage = () => {
       const subDistrictObj = subDistricts.find(s => s.id === selectedSubDistrict);
       const response = await fetch(`${REACT_APP_BACKEND1}/verify-village`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          "Authorization": `Bearer ${token}`,   // <-- Send token
+
+        },
         body: JSON.stringify({
           // village_lgd_code: villageData?.lgdCode,
           // district_lgd_code: " ",
@@ -848,7 +864,10 @@ const VerifyVillage = () => {
       const subDistrictObj = subDistricts.find(s => s.id === selectedSubDistrict);
       const response = await fetch(`${REACT_APP_BACKEND1}/verify-village`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          "Authorization": `Bearer ${token}`   // <-- Send token
+        },
         body: JSON.stringify({
           // village_lgd_code: villageData?.lgdCode,
           // village_name: villageData?.name,
@@ -876,7 +895,6 @@ const VerifyVillage = () => {
     }
   };
   useEffect(() => {
-    console.log(isVerified, "__isVerified updated");
     if (isVerified) {
       setCurrentStep(0);
     }
@@ -894,7 +912,10 @@ const VerifyVillage = () => {
     try {
       const res = await fetch(`${REACT_APP_BACKEND1}/verify-plots`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,   // <-- Send token
+        },
         body: JSON.stringify({
           surveyNumber: plotId.surveyNumber,
           villageLgdCode: villageData?.lgdCode,
@@ -929,7 +950,10 @@ const VerifyVillage = () => {
       const subDistrictObj = subDistricts.find(s => s.id === selectedSubDistrict);
       const res = await fetch(`${REACT_APP_BACKEND1}/verify-village`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+         headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,   // <-- Send token
+        },
         // body: JSON.stringify({
         //   village_lgd_code: villageData?.lgdCode,
         //   verified_plots: verifiedPlots,

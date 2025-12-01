@@ -211,7 +211,6 @@ const VillageMap = ({ villageData, onPlotClick, verificationStatus }) => {
     }
     return coords.map(convertCoordinates);
   };
-console.log(villageData,"__villageData")
 let villageCheck 
   if(!villageData || villageData === null){
     villageCheck=true
@@ -282,7 +281,6 @@ let villageCheck
         if (onPlotClick) {
           polygonLayer.on('click', () => {
             // Change color immediately on click
-            console.log("verificationStatus",verificationStatus);
             if (verificationStatus && verificationStatus === 'correct') {
               polygonLayer.setStyle({
                 color: 'green',

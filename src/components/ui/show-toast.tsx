@@ -12,6 +12,10 @@ export const showToast = (status: number, message: string) => {
     // Warning / Not Found
     icon = <AlertCircle className="w-6 h-6 text-yellow-500" />;
     titleColor = "text-yellow-600";
+  } else if (status === 401 || status === 403) {
+    // Unauthorized / Token expired
+    icon = <AlertCircle className="w-6 h-6 text-orange-500" />;
+    titleColor = "text-orange-600";
   } else if (status >= 500) {
     // Server error
     icon = <XCircle className="w-6 h-6 text-red-500" />;
@@ -31,5 +35,6 @@ export const showToast = (status: number, message: string) => {
         </div>
       </div>
     ),
+    
   });
 };

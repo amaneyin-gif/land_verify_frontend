@@ -17,6 +17,7 @@ import { showToast } from '@/components/ui/show-toast';
 import { Loader } from '../components/ui/loader';
 import { Link } from "react-router-dom";
 import { ArrowUpDown } from "lucide-react";
+import { Input } from '@/components/ui/input';
 let REACT_APP_BACKEND1 = 'https://x9k84zq3-3002.inc1.devtunnels.ms/api'
 let REACT_APP_BACKEND2 = 'https://79dkd582-3002.inc1.devtunnels.ms/api'
 
@@ -306,22 +307,36 @@ const Dashboard = () => {
   });
   const [recentVillages, setRecentVillages] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const [accessibleRoutes, setAccessibleRoutes] = useState([]);
   // Search + Sort states
   const searchRef = useRef(null);
   const [filteredVillages, setFilteredVillages] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
+
   useEffect(() => {
     const fetchDashboardData = async () => {
       setLoading(true);
+      const token = JSON.parse(localStorage.getItem('user'))?.token || '';
       try {
-        const res = await fetch(`${REACT_APP_BACKEND1}/dashboard`);
+        const res = await fetch(`${REACT_APP_BACKEND1}/dashboard`, {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,   // <-- Send token
+          }
+        });
+        // 👉 HANDLE TOKEN ERRORS (redirect to login)
+        if (res.status === 401 || res.status === 403) {
+          // Backend says: token invalid / expired
+          localStorage.removeItem("user");
+          showToast(401, "Session expired. Please login again.");
+          window.location.href = "/login";  // redirect
+          return;
+        }
         if (!res.ok) throw new Error("Failed to fetch dashboard data");
 
         const data = await res.json();
         const dashboard = data.data || {};
-        console.log(dashboard, "__Dashboard");
 
         setStats({
           totalVerified: dashboard.totalVerified || 0,
@@ -344,6 +359,78 @@ const Dashboard = () => {
 
     fetchDashboardData();
   }, []);
+
+  // useEffect(() => {
+  //   const fetchDashboardData = async () => {
+  //     setLoading(true);
+
+  //     const token = JSON.parse(localStorage.getItem("user"))?.token || "";
+
+  //     try {
+  //       // ---------- FETCH DASHBOARD ----------
+  //       const res = await fetch(`${REACT_APP_BACKEND1}/dashboard`, {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           "Authorization": `Bearer ${token}`,
+  //         }
+  //       });
+
+  //       // Handle expired token
+  //       if (res.status === 401 || res.status === 403) {
+  //         localStorage.removeItem("user");
+  //         showToast(401, "Session expired. Please login again.");
+  //         window.location.href = "/login";
+  //         return;
+  //       }
+
+  //       if (!res.ok) throw new Error("Failed to fetch dashboard data");
+
+  //       const dashboardResponse = await res.json();
+  //       const dashboard = dashboardResponse.data || {};
+
+  //       // ---------- FETCH ROUTES ----------
+  //       const routesRes = await fetch(`${REACT_APP_BACKEND1}/user/accessible-routes`, {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           "Authorization": `Bearer ${token}`,
+  //         }
+  //       });
+
+  //       let routes = [];
+  //       if (routesRes.ok) {
+  //         const routesData = await routesRes.json();
+  //         routes = Array.isArray(routesData.data) ? routesData.data : [];
+  //         setAccessibleRoutes(routes);
+  //       } else {
+  //         console.error("Failed to fetch routes");
+  //         setAccessibleRoutes([]);
+  //       }
+
+  //       // ---------- SET STATS ----------
+  //       setStats({
+  //         totalVerified: dashboard.totalVerified || 0,
+  //         correctMaps: dashboard.correctedMapVillage || 0,
+  //         incorrect: dashboard.incorrectVerification || 0,
+  //         geomap: dashboard.geoMappedVillage || 0,
+  //       });
+
+  //       const villages = dashboard.recentVerifiedVillages || [];
+  //       setRecentVillages(villages);
+  //       setFilteredVillages(villages);
+
+  //       showToast(200, dashboardResponse.message);
+
+  //     } catch (error) {
+  //       console.error(error);
+  //       showToast(500, "Failed to load dashboard data");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchDashboardData();
+  // }, []);
+
 
   // 🔹 Search handler (no value/onChange)
   const handleSearch = () => {
@@ -474,7 +561,7 @@ const Dashboard = () => {
                     placeholder="Search by LGD Code..."
                     className="w-72 border rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-[hsl(142,76%,28%)]"
                   /> */}
-                  <input
+                  <Input
                     type="text"
                     inputMode="numeric"
                     pattern="\d*"
@@ -492,9 +579,6 @@ const Dashboard = () => {
                     maxLength={6}
                     className="w-60 border rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-[hsl(142,76%,36%)]"
                   />
-
-
-
                 </div>
               </CardHeader>
 

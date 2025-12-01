@@ -170,7 +170,7 @@
 
 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LogOut, LayoutDashboard, MapPin, Menu } from 'lucide-react';
+import { LogOut, LayoutDashboard, MapPin, Menu, UserPen, } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -183,9 +183,10 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { useState } from 'react';
+import path from 'path';
 
 const Navbar = () => {
-  const { logout, user } = useAuth();
+  const { logout, user, accessibleRoutes } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
@@ -193,8 +194,9 @@ const Navbar = () => {
   const navItems = [
     { path: '/home', label: 'Home', icon: LayoutDashboard },
     { path: '/verify', label: 'Verify Village', icon: MapPin },
+    { path: '/user-management', label: 'User Management', icon: UserPen },
   ];
-
+  console.log(accessibleRoutes, "___navbar accessibleRoutes");
   const handleLogoutConfirm = async () => {
     try {
       await logout(); // call your logout function
@@ -218,11 +220,11 @@ const Navbar = () => {
                 <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                   <MapPin className="h-5 w-5 text-primary-foreground" />
                 </div>
-                <span className="font-semibold text-lg text-foreground">AgriStack</span>
+                <span className="font-semibold text-lg text-foreground">AgriStack <span className="text-xs align-center">(GRMAS)</span></span>
               </Link>
 
               <div className="hidden md:flex items-center gap-2">
-                {navItems.map((item) => (
+                {navItems.filter(item => accessibleRoutes.includes(item.path)).map((item) => (
                   <Link key={item.path} to={item.path}>
                     <Button
                       variant={location.pathname === item.path ? 'default' : 'ghost'}
@@ -239,7 +241,7 @@ const Navbar = () => {
 
             {/* RIGHT: User + Logout (Desktop) */}
             <div className="hidden md:flex items-center gap-4">
-              <span className="text-sm text-muted-foreground">{user?.name}</span>
+              <span className="text-sm text-muted-foreground">{user?.name} ({user.userid})</span>
               <Button
                 onClick={() => setOpenDialog(true)}
                 variant="outline"
@@ -263,7 +265,7 @@ const Navbar = () => {
                 <SheetContent side="right" className="flex flex-col justify-between p-4">
                   {/* Nav Links */}
                   <div className="flex flex-col gap-2 mt-6">
-                    {navItems.map((item) => (
+                    {navItems.filter(item => accessibleRoutes.includes(item.path)).map((item) => (
                       <Link key={item.path} to={item.path}>
                         <Button
                           variant={location.pathname === item.path ? 'default' : 'ghost'}
@@ -279,7 +281,7 @@ const Navbar = () => {
                   {/* Logout (bottom) */}
                   <div className="border-t pt-4 mt-4">
                     <div className="flex flex-col gap-2">
-                      <span className="text-sm text-muted-foreground">{user?.name}</span>
+                      <span className="text-sm text-muted-foreground">{user?.name} ({user.userid})</span>
                       <Button
                         onClick={() => setOpenDialog(true)}
                         variant="outline"
