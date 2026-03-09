@@ -544,7 +544,12 @@ const VerifyVillage = () => {
         if (checkData?.data?.verified) setIsVerified(true);
 
         // ✅ Fetch actual village data for plotting
-        const res = await fetch(`${REACT_APP_BACKEND2}/village-data/${initialVillageCode}`);
+        const res = await fetch(`${REACT_APP_BACKEND2}/village-data/${initialVillageCode}`, {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,   // <-- Send token
+          }
+        });
         if (!res.ok) throw new Error("Failed to fetch village data");
         const data = await res.json();
 
@@ -555,7 +560,6 @@ const VerifyVillage = () => {
           plots: data.data.plots,
         };
         setVillageData(mappedData);
-
         setVerificationStatus(
           checkData?.data
             ? {
@@ -579,6 +583,7 @@ const VerifyVillage = () => {
       isMounted = false;
     };
   }, [initialVillageCode]);
+  console.log(villageData, "__villageData from here ")
 
   useEffect(() => {
     if (location.state) {
@@ -746,15 +751,25 @@ const VerifyVillage = () => {
     if (!selectedVillage) return;
     setLoading(true);
     try {
-      const res = await fetch(`${REACT_APP_BACKEND2}/village-data/${selectedVillage}`);
+      const res = await fetch(`${REACT_APP_BACKEND2}/village-data/${selectedVillage}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,   // <-- Send token
+        }
+      });
       if (!res.ok) throw new Error("Failed to fetch village data");
       const data = await res.json();
+      console.log(data, "__village data from here_1")
       const mappedData = {
         id: selectedVillage,
         name: villages.find(v => v.id === selectedVillage)?.name || '',
         lgdCode: villages.find(v => v.id === selectedVillage)?.lgdCode || '',
         plots: data.data.plots,
+        villageBoundary: data.data.villageBoundary, // full geometry
+        villageBoundary2: data.data.villageBoundary2, // full geometry source 2
+        AiPLots: data.data.villagePlots
       };
+
       // const res2 = await fetch(`${REACT_APP_BACKEND1}/check-plot-count/${selectedVillage}`);
       // if (!res.ok) throw new Error("Failed to fetch plot count");
       // const data2 = await res2.json();
@@ -950,7 +965,7 @@ const VerifyVillage = () => {
       const subDistrictObj = subDistricts.find(s => s.id === selectedSubDistrict);
       const res = await fetch(`${REACT_APP_BACKEND1}/verify-village`, {
         method: "POST",
-         headers: {
+        headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,   // <-- Send token
         },
@@ -1096,7 +1111,8 @@ const VerifyVillage = () => {
       case 3:
         return (
           <>
-            <p>Now Mark at least <strong>{villagePlotCount?.mandatoryPlots || 5}</strong> Correct Plots by clicking them on the plot using map.</p>
+            {console.log(feedback, "___feedback 0000")}
+            <p>Now Mark at least <strong>{villagePlotCount?.mandatoryPlots || 5}</strong> {feedback === "correct" ? "Correct" : "Incorrect"} Plots by clicking them on the plot using map.</p>
             <p className="text-sm text-gray-500">Verified: {verifiedPlots}</p>
             {verifiedPlots >= (villagePlotCount?.mandatoryPlots || 5) && (
               // <Button className="mt-4" onClick={() => setCurrentStep(4)}>Next</Button>
@@ -1147,12 +1163,22 @@ const VerifyVillage = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* <div className="grid grid-cols-1 lg:grid-cols-3 gap-6" style={{ border: "1px solid red" }}> */}
+        <div
+          className="grid grid-cols-1 lg:grid-cols-[20%_80%] gap-4"
+          // style={{ border: "1px solid red" }}
+        >
+
+
           {/* Selection Panel */}
           {/* Left Column */}
           <div className="flex flex-col gap-6 lg:col-span-1">
 
-            <Card className="lg:col-span-1 shadow-soft h-fit">
+            {/* <Card className="lg:col-span-1 shadow-soft h-fit" style={{ border: "1px solid red" }}> */}
+            <Card className="shadow-soft h-fit" 
+            // style={{ border: "1px solid red" }}
+            >
+
               <CardHeader>
                 <CardTitle>Select Location</CardTitle>
               </CardHeader>
@@ -1311,7 +1337,11 @@ const VerifyVillage = () => {
                 </ul>
               </CardHeader>
             </Card> */}
-            <Card className="shadow-soft h-fit">
+            {/* <Card className="shadow-soft h-fit" style={{ border: "1px solid red" }}> */}
+            <Card className="shadow-soft h-fit" 
+            // style={{ border: "1px solid red" }}
+            >
+
               {/* <CardHeader>
                 <CardTitle>Start Verification</CardTitle>
               </CardHeader> */}
@@ -1327,7 +1357,11 @@ const VerifyVillage = () => {
             </Card>
           </div>
           {/* Map Panel */}
-          <Card className="lg:col-span-2 shadow-soft">
+          {/* <Card className="lg:col-span-2 shadow-soft" style={{ border: "1px solid red" }}> */}
+          <Card className="shadow-soft" 
+          // style={{ border: "1px solid red" }}
+          >
+
             <CardHeader>
 
               <CardTitle className="flex items-center justify-between w-full">

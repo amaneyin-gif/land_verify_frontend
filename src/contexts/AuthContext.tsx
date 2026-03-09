@@ -1,6 +1,7 @@
 // import { createContext, useContext, useState, useEffect } from 'react';
 
 let REACT_APP_BACKEND = 'https://x9k84zq3-3002.inc1.devtunnels.ms/api'
+import { showToast } from "@/components/ui/show-toast";
 // let REACT_APP_BACKEND2 = 'https://79dkd582-3002.inc1.devtunnels.ms/api'
 
 // const AuthContext = createContext(undefined);
@@ -226,8 +227,8 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(storedUser || null);
   const [accessibleRoutes, setAccessibleRoutes] = useState([]);
   const [loadingRoutes, setLoadingRoutes] = useState(true);
-console.log(accessibleRoutes,"__accessibleRoutes")
-console.log(user,"__user from authProvider")
+  console.log(accessibleRoutes, "__accessibleRoutes")
+  console.log(user, "__user from authProvider")
   const login = async (userid, password) => {
     try {
       const response = await fetch(`${REACT_APP_BACKEND}/login`, {
@@ -248,10 +249,12 @@ console.log(user,"__user from authProvider")
 
       // Success login
       const userData = await response.json();
-      const user = { userid: userData.user.userid, name: userData.user.name, token: userData.token };
+      // console.log(userData, "__userData from login")
+      const user = { userid: userData.user.userid, name: userData.user.name, token: userData.token, role: userData.user.role };
       setUser(user);
       localStorage.setItem("user", JSON.stringify(user));
-
+      setAccessibleRoutes([]);
+      setLoadingRoutes(true);
       return {
         status: true,
         data: userData,
@@ -273,10 +276,11 @@ console.log(user,"__user from authProvider")
   useEffect(() => {
     const fetchRoutes = async () => {
       if (!user) {
+        setAccessibleRoutes([]);
         setLoadingRoutes(false);
         return;
       }
-      console.log(storedUser,"--storedUser")
+      console.log(storedUser, "--storedUser")
 
       try {
         const res = await fetch(`${REACT_APP_BACKEND}/user/accessible-routes`, {
@@ -284,19 +288,31 @@ console.log(user,"__user from authProvider")
             Authorization: `Bearer ${user.token}`,
           },
         });
-        console.log(res,"___route response1234")
+        const data = await res.json();
+        if (res.status === 401 || res.status === 403 ||
+          data?.message?.toLowerCase().includes("token")) {
+          showToast(res.status, "Session expired. Please login again.");
+          logout();
+          return;
+        }
         if (!res.ok) {
+          console.log(data, "___route response error")
           setAccessibleRoutes([]);
+          showToast(res.status, data.message || "Failed to check accessible routes");
         } else {
-          const data = await res.json();
+          console.log(data, "___route response1234")
           // backend should return array of routes
           setAccessibleRoutes(Array.isArray(data.data) ? data.data : []);
         }
       } catch (err) {
+        setAccessibleRoutes([]);
         console.error("Route fetch error", err);
+      } finally {
+        setLoadingRoutes(false);
+
       }
 
-      setLoadingRoutes(false);
+      // setLoadingRoutes(false);
     };
 
     fetchRoutes();

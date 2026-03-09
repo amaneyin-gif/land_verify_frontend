@@ -29,7 +29,7 @@ import { Input } from "../ui/input";
 const UsersTab = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([]);
   // 🔥 used by CreateUserDialog after success
   return (
     <div className="space-y-4">
@@ -59,7 +59,7 @@ const [users, setUsers] = useState([]);
       </div>
 
       {/* Pass searchQuery to UsersList */}
-      <UsersList users={users} setUsers={setUsers} searchQuery={searchQuery}  />
+      <UsersList users={users} setUsers={setUsers} searchQuery={searchQuery} />
       <CreateUserDialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen} onUserCreated={(newUser) => setUsers(prev => [newUser, ...prev])} />
     </div>
   );

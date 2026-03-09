@@ -201,6 +201,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 const VillageMap = ({ villageData, onPlotClick, verificationStatus }) => {
+  console.log(villageData, "___villageData in VillageMap");
   const mapRef = useRef(null);
   const mapContainerRef = useRef(null);
   const plotLayersRef = useRef({}); // Store references to polygon layers by plot ID
@@ -211,9 +212,9 @@ const VillageMap = ({ villageData, onPlotClick, verificationStatus }) => {
     }
     return coords.map(convertCoordinates);
   };
-let villageCheck 
-  if(!villageData || villageData === null){
-    villageCheck=true
+  let villageCheck
+  if (!villageData || villageData === null) {
+    villageCheck = true
   }
   // Initialize map only once
   useEffect(() => {
@@ -227,6 +228,8 @@ let villageCheck
       {
         attribution: '&copy; <a href="https://www.esri.com/">Esri</a>',
         maxZoom: 18,
+        // maxNativeZoom: 18,
+        // maxZoom: 22,
       }
     ).addTo(mapRef.current);
 
@@ -241,7 +244,7 @@ let villageCheck
   // Render plots only when villageData changes
   useEffect(() => {
     // if (!mapRef.current || !villageData?.plots?.length) return;
-     if (!mapRef.current) return;
+    if (!mapRef.current) return;
 
     // Clear previous polygon & marker layers
     mapRef.current.eachLayer((layer) => {
@@ -252,8 +255,64 @@ let villageCheck
 
     // Clear plot layer references
     plotLayersRef.current = {};
-  // If villageData is null or has no plots, just return after cleanup
-  if (!villageData?.plots?.length) return;
+
+
+    // -------------------------------------------
+    // 1️⃣ DRAW VILLAGE BOUNDARY (BLUE)
+    // -------------------------------------------
+    // if (villageData?.villageBoundary?.geometry) {
+    //   const boundaryPolygons = villageData.villageBoundary.geometry.coordinates.map(
+    //     (poly) => poly.map((ring) => ring.map(([lng, lat]) => [lat, lng]))
+    //   );
+
+    //   boundaryPolygons.forEach((polygon) => {
+    //     L.polygon(polygon, {
+    //       color: 'blue',
+    //       weight: 3,
+    //       fillOpacity: 0,
+    //     }).addTo(mapRef.current);
+    //   });
+    // }
+
+    if (villageData?.villageBoundary2?.geometry) {
+      const coords = villageData.villageBoundary2.geometry.coordinates;
+
+      // FIX: Polygon → first element contains the actual ring
+      const ring = coords[0];
+
+      const latLngPolygon = ring.map(([lng, lat]) => [lat, lng]);
+// console.log(latLngPolygon, "___latLngPolygon");
+      L.polygon(latLngPolygon, {
+        color: 'black',
+        weight: 3,
+        fillOpacity: 0,
+      }).addTo(mapRef.current);
+    }
+
+    // -------------------------------------------
+    // 2️⃣ DRAW AI PLOTS (PURPLE)
+    // -------------------------------------------
+    // if (villageData?.AiPLots?.length) {
+    //   console.log("Drawing AI Plots...");
+    //   villageData.AiPLots.forEach((plot) => {
+    //     const polygons = plot.geometry.coordinates.map((poly) =>
+    //       poly.map((ring) => ring.map(([lng, lat]) => [lat, lng]))
+    //     );
+
+    //     polygons.forEach((polygon) => {
+    //       L.polygon(polygon, {
+    //         color: 'purple',
+    //         weight: 2,
+    //         fillOpacity: 0.05,
+    //       }).addTo(mapRef.current);
+    //     });
+    //   });
+    // }
+
+
+
+    // If villageData is null or has no plots, just return after cleanup
+    if (!villageData?.plots?.length) return;
 
     const allLatLngs = [];
 
@@ -338,17 +397,17 @@ let villageCheck
           //   color: 'green',
           //   fillOpacity: 0.3,
           // });
-             if (verificationStatus && verificationStatus === 'correct') {
-              layer.setStyle({
-                color: 'green',
-                fillOpacity: 0.3,
-              });
-            } else if (verificationStatus && verificationStatus === 'incorrect') {
-              layer.setStyle({
-                color: 'red',
-                fillOpacity: 0.3,
-              });
-            }
+          if (verificationStatus && verificationStatus === 'correct') {
+            layer.setStyle({
+              color: 'green',
+              fillOpacity: 0.3,
+            });
+          } else if (verificationStatus && verificationStatus === 'incorrect') {
+            layer.setStyle({
+              color: 'red',
+              fillOpacity: 0.3,
+            });
+          }
 
           // Call the parent callback
           onPlotClick(plot);

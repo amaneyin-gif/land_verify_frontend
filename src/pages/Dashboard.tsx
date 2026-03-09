@@ -18,6 +18,7 @@ import { Loader } from '../components/ui/loader';
 import { Link } from "react-router-dom";
 import { ArrowUpDown } from "lucide-react";
 import { Input } from '@/components/ui/input';
+import { ScrollableTable } from '@/components/ui/scrollable';
 let REACT_APP_BACKEND1 = 'https://x9k84zq3-3002.inc1.devtunnels.ms/api'
 let REACT_APP_BACKEND2 = 'https://79dkd582-3002.inc1.devtunnels.ms/api'
 
@@ -469,89 +470,93 @@ const Dashboard = () => {
   }, [filteredVillages, sortConfig]);
 
   return (
-    <div className="min-h-screen bg-muted/30">
+
+    // <div className="min-h-screen bg-muted/30">
+    <div className="flex h-screen bg-muted/30 overflow-hidden">
       <Navbar />
+      {/* <div style={{ border: "1px solid red" }}> */}
+      <div className="flex-1 overflow-auto transition-all duration-300">
 
-      <main className="container mx-auto px-4 py-8">
-        {loading ? (
-          <div className="flex items-center justify-center h-[70vh]">
-            <Loader />
-          </div>
-        ) : (
-          <>
-            {/* Top Heading */}
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold text-foreground mb-2">Dashboard</h1>
-              <p className="text-muted-foreground">Overview of village land verification</p>
+        <main className="container mx-auto px-4 py-8">
+          {loading ? (
+            <div className="flex items-center justify-center h-[70vh]">
+              <Loader />
             </div>
-
-            {/* Map + Stats */}
-            <div className="flex flex-col lg:flex-row gap-6 mb-8">
-              {/* Map */}
-              <Card className="shadow-soft lg:w-2/3">
-                <CardHeader>
-                  <CardTitle className="text-xl">Uttar Pradesh Map</CardTitle>
-                </CardHeader>
-                <CardContent className="p-0">
-                  <div className="w-full h-[400px] flex items-center justify-center bg-muted/30 rounded-b-lg overflow-hidden">
-                    <img
-                      src={StateMap}
-                      alt="State Map"
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Stats */}
-              <div className="flex flex-col gap-6 lg:w-1/3">
-                <StatCard
-                  title="Total Geo Maps Village"
-                  value={stats.geomap}
-                  icon={MapPin}
-                  variant="warning"
-                />
-                <StatCard
-                  title="Total Verified Villages"
-                  value={stats.totalVerified}
-                  icon={MapPin}
-                  variant="default"
-                />
-                <StatCard
-                  title="Correct Village Maps"
-                  value={stats.correctMaps}
-                  icon={CheckCircle}
-                  variant="success"
-                />
-                <StatCard
-                  title="Incorrect Village Maps"
-                  value={stats.incorrect}
-                  icon={Clock}
-                  variant="warning"
-                />
+          ) : (
+            <>
+              {/* Top Heading */}
+              <div className="mb-8">
+                <h1 className="text-3xl font-bold text-foreground mb-2">Dashboard</h1>
+                <p className="text-muted-foreground">Overview of village land verification</p>
               </div>
-            </div>
 
-            {/* Recent Verifications */}
-            <Card className="shadow-soft">
-              <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <CardTitle className="text-xl">Recent Verifications</CardTitle>
-                <div className="flex items-center gap-2">
-                  {/* <input
+              {/* Map + Stats */}
+              <div className="flex flex-col lg:flex-row gap-6 mb-8">
+                {/* Map */}
+                <Card className="shadow-soft lg:w-2/3">
+                  <CardHeader>
+                    <CardTitle className="text-xl">Uttar Pradesh Map</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    <div className="w-full h-[400px] flex items-center justify-center bg-muted/30 rounded-b-lg overflow-hidden">
+                      <img
+                        src={StateMap}
+                        alt="State Map"
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Stats */}
+                <div className="flex flex-col gap-6 lg:w-1/3">
+                  <StatCard
+                    title="Total Geo Maps Village"
+                    value={stats.geomap}
+                    icon={MapPin}
+                    variant="warning"
+                  />
+                  <StatCard
+                    title="Total Verified Villages"
+                    value={stats.totalVerified}
+                    icon={MapPin}
+                    variant="default"
+                  />
+                  <StatCard
+                    title="Correct Village Maps"
+                    value={stats.correctMaps}
+                    icon={CheckCircle}
+                    variant="success"
+                  />
+                  <StatCard
+                    title="Incorrect Village Maps"
+                    value={stats.incorrect}
+                    icon={Clock}
+                    variant="warning"
+                  />
+                </div>
+              </div>
+
+              {/* Recent Verifications */}
+              <Card className="shadow-soft">
+                <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                  <CardTitle className="text-xl">Recent Verifications</CardTitle>
+                  <div className="flex items-center gap-2">
+                    {/* <input
                     type="text"
                     ref={searchRef}
                     onInput={handleSearch}
                     placeholder="Search by Village LGD Code..."
                     className="border rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-hsl(142 76% 28%) -500"
                   /> */}
-                  {/* <input
+                    {/* <input
                     type="text"
                     ref={searchRef}
                     onInput={handleSearch}
                     placeholder="Search by Village LGD Code..."
                     className="w-72 border rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-[hsl(142,76%,28%)]"
                   /> */}
-                  {/* <input
+                    {/* <input
                     type="text"
                     ref={searchRef}
                     onInput={(e) => {
@@ -561,32 +566,33 @@ const Dashboard = () => {
                     placeholder="Search by LGD Code..."
                     className="w-72 border rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-[hsl(142,76%,28%)]"
                   /> */}
-                  <Input
-                    type="text"
-                    inputMode="numeric"
-                    pattern="\d*"
-                    ref={searchRef}
-                    onInput={(e) => {
-                      const input = e.target as HTMLInputElement;
-                      // keep only digits, max 6
-                      const sanitized = input.value.replace(/\D/g, "").slice(0, 6);
-                      // update actual input shown to user
-                      input.value = sanitized;
-                      // call your existing handler which reads from searchRef.current
-                      handleSearch();
-                    }}
-                    placeholder="Search by Village LGD Code..."
-                    maxLength={6}
-                    className="w-60 border rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-[hsl(142,76%,36%)]"
-                  />
-                </div>
-              </CardHeader>
+                    <Input
+                      type="text"
+                      inputMode="numeric"
+                      pattern="\d*"
+                      ref={searchRef}
+                      onInput={(e) => {
+                        const input = e.target as HTMLInputElement;
+                        // keep only digits, max 6
+                        const sanitized = input.value.replace(/\D/g, "").slice(0, 6);
+                        // update actual input shown to user
+                        input.value = sanitized;
+                        // call your existing handler which reads from searchRef.current
+                        handleSearch();
+                      }}
+                      placeholder="Search by Village LGD Code..."
+                      maxLength={6}
+                      className="w-60 border rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-[hsl(142,76%,36%)]"
+                    />
+                  </div>
+                </CardHeader>
 
-              <CardContent>
-                <div className="overflow-x-auto">
-                  <div className="max-h-[400px] overflow-y-auto rounded-md">
-                    <Table>
-                      <TableHeader className="sticky top-0 bg-background z-10">
+                {/* <CardContent> */}
+                <ScrollableTable >
+
+                  <div className="overflow-x-auto">
+                    <Table className="table-fixed w-full">
+                      <TableHeader className="bg-background sticky top-0 z-20">
                         <TableRow>
                           {[
                             { label: "District", key: "district_name" },
@@ -610,73 +616,81 @@ const Dashboard = () => {
                           ))}
                         </TableRow>
                       </TableHeader>
+                    </Table>
+                    <div className="max-h-[400px] overflow-y-auto rounded-md">
+                      <Table className="table-fixed w-full">
 
-                      <TableBody>
-                        {sortedVillages.length === 0 ? (
-                          <TableRow>
-                            <TableCell
-                              colSpan={7}
-                              className="text-center text-muted-foreground"
-                            >
-                              No recent verifications found
-                            </TableCell>
-                          </TableRow>
-                        ) : (
-                          sortedVillages.map((village) => (
-                            <TableRow key={village.village_lgd_code}>
-                              <TableCell>{village.district_name || "—"}</TableCell>
-                              <TableCell>{village.sub_district_name || "—"}</TableCell>
-                              <TableCell>{village.village_lgd_code}</TableCell>
-                              <TableCell className="font-medium">
-                                <Link
-                                  to={`/verify`}
-                                  state={{
-                                    villageLgdCode: village.village_lgd_code,
-                                    villageName: village.village_name,
-                                  }}
-                                  className="text-blue-600 hover:underline hover:text-blue-800 transition-colors"
-                                >
-                                  {village.village_name}
-                                </Link>
-                              </TableCell>
-                              <TableCell>
-                                <Badge
-                                  variant={
-                                    village.status === "correct"
-                                      ? "default"
-                                      : "destructive"
-                                  }
-                                  className={
-                                    village.status === "correct"
-                                      ? "bg-green-100 text-green-700"
-                                      : "bg-red-100 text-red-700"
-                                  }
-                                >
-                                  {village.status === "correct"
-                                    ? "Correct"
-                                    : "Incorrect"}
-                                </Badge>
-                              </TableCell>
-                              <TableCell>{village.verified_by || "—"}</TableCell>
-                              <TableCell className="text-muted-foreground">
-                                {new Date(village.created_at).toLocaleString("en-IN", {
-                                  dateStyle: "medium",
-                                  timeStyle: "short",
-                                })}
+                        <TableBody>
+                          {sortedVillages.length === 0 ? (
+                            <TableRow>
+                              <TableCell
+                                colSpan={7}
+                                className="text-center text-muted-foreground"
+                              >
+                                No recent verifications found
                               </TableCell>
                             </TableRow>
-                          ))
-                        )}
-                      </TableBody>
-                    </Table>
+                          ) : (
+                            sortedVillages.map((village) => (
+                              <TableRow key={village.village_lgd_code}>
+                                <TableCell>{village.district_name || "—"}</TableCell>
+                                <TableCell>{village.sub_district_name || "—"}</TableCell>
+                                <TableCell>{village.village_lgd_code}</TableCell>
+                                <TableCell className="font-medium">
+                                  <Link
+                                    to={`/verify`}
+                                    state={{
+                                      villageLgdCode: village.village_lgd_code,
+                                      villageName: village.village_name,
+                                    }}
+                                    className="text-blue-600 hover:underline hover:text-blue-800 transition-colors"
+                                  >
+                                    {village.village_name}
+                                  </Link>
+                                </TableCell>
+                                <TableCell>
+                                  <Badge
+                                    variant={
+                                      village.status === "correct"
+                                        ? "default"
+                                        : "destructive"
+                                    }
+                                    className={
+                                      village.status === "correct"
+                                        ? "bg-green-100 text-green-700"
+                                        : "bg-red-100 text-red-700"
+                                    }
+                                  >
+                                    {village.status === "correct"
+                                      ? "Correct"
+                                      : "Incorrect"}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell>{village.verified_by || "—"}</TableCell>
+                                <TableCell className="text-muted-foreground">
+                                  {new Date(village.created_at).toLocaleString("en-IN", {
+                                    dateStyle: "medium",
+                                    timeStyle: "short",
+                                  })}
+                                </TableCell>
+                              </TableRow>
+                            ))
+                          )}
+                        </TableBody>
+                      </Table>
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          </>
-        )}
-      </main>
+                </ScrollableTable>
+                {/* </CardContent> */}
+              </Card>
+            </>
+          )}
+        </main>
+      </div>
+
+      {/* </div> */}
     </div>
+
   );
 };
 

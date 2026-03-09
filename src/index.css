@@ -121,3 +121,30 @@ All colors MUST be HSL.
     background: var(--gradient-hero);
   }
 }
+
+/* remove browser default focus ring */
+/* *:focus {
+  outline: none !important;
+}
+
+*:focus-visible {
+  outline: none !important;
+} */
+/* 
+button:focus,
+button:focus-visible,
+a:focus,
+a:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+} */
+
+
+/* remove browser default outline only */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: none;
+}

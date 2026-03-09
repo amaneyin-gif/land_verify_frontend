@@ -2,6 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Button } from "@/components/ui/button";
 
 const ConfirmDialog = ({ open, setOpen, title, description, confirmText = "Confirm", cancelText = "Cancel", onConfirm }) => {
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       
